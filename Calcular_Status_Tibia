@@ -1,0 +1,150 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+class Personagem {
+    String classe;
+    int nivel;
+    int vida;
+    int mana;
+    int cap;
+
+    // Métodos para calcular vida e mana para cada classe
+    void calcularVida() {
+        switch (classe) {
+            case "Knight":
+                this.vida = ((nivel - 8) * 15) + 185;
+                break;
+            case "Paladin":
+                this.vida = ((nivel - 8) * 10) + 185;
+                break;
+            case "Mage":
+                this.vida = ((nivel - 8) * 5) + 185;
+                break;
+            case "Monk":
+                this.vida = ((nivel - 8) * 10) + 185;
+                break;
+        }
+    }
+
+    void calcularMana() {
+        switch (classe) {
+            case "Knight":
+                this.mana = ((nivel - 8) * 5) + 90;
+                break;
+            case "Paladin":
+                this.mana = ((nivel - 8) * 15) + 90;
+                break;
+            case "Mage":
+                this.mana = ((nivel - 8) * 30) + 90;
+                break;
+            case "Monk":
+                this.mana = ((nivel - 8) * 10) + 90;
+                break;
+        }
+    }
+
+    void calcularCap() {
+        switch (classe) {
+            case "Knight":
+                this.cap = ((nivel - 8) * 25) + 470;
+                break;
+            case "Paladin":
+                this.cap = ((nivel - 8) * 20) + 470;
+                break;
+            case "Mage":
+                this.cap = ((nivel - 8) * 10) + 470;
+                break;
+            case "Monk":
+                this.cap = ((nivel - 8) * 25) + 470;
+                break;
+        }
+    }
+
+    // Método para exibir as informações do personagem
+    String exibirInfo() {
+        return "Classe: " + classe + "\n" +
+               "Nível: " + nivel + "\n" +
+               "Vida: " + vida + "\n" +
+               "Mana: " + mana + "\n" +
+               "Cap :" + cap;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Criando a janela principal
+        JFrame frame = new JFrame("Calculadora de Personagem - Tibia");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(null); // Layout livre para posicionar os componentes
+
+        // Criando os componentes gráficos
+        JLabel classeLabel = new JLabel("Escolha a classe:");
+        classeLabel.setBounds(20, 20, 200, 30);
+        frame.add(classeLabel);
+
+        // Criando o JComboBox com as opções de classes
+        String[] classes = {"Knight", "Paladin", "Mage", "Monk"};
+        JComboBox<String> classeComboBox = new JComboBox<>(classes);
+        classeComboBox.setBounds(220, 20, 150, 30);
+        frame.add(classeComboBox);
+
+        JLabel nivelLabel = new JLabel("Nível do personagem:");
+        nivelLabel.setBounds(20, 60, 200, 30);
+        frame.add(nivelLabel);
+
+        JTextField nivelField = new JTextField();
+        nivelField.setBounds(220, 60, 150, 30);
+        frame.add(nivelField);
+
+        JButton calcularButton = new JButton("Calcular");
+        calcularButton.setBounds(150, 100, 100, 30);
+        frame.add(calcularButton);
+
+        // Label para exibir o resultado
+        JTextArea resultadoArea = new JTextArea();
+        resultadoArea.setBounds(20, 140, 350, 100);
+        resultadoArea.setEditable(false);
+        frame.add(resultadoArea);
+
+        // Ação do botão Calcular
+        calcularButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Obter os dados do usuário
+                String classe = (String) classeComboBox.getSelectedItem(); // Pegando o item selecionado no JComboBox
+                String nivelText = nivelField.getText().trim();
+
+                // Validar a entrada
+                if (classe == null || nivelText.isEmpty()) {
+                    resultadoArea.setText("Por favor, preencha todos os campos.");
+                    return;
+                }
+
+                try {
+                    int nivel = Integer.parseInt(nivelText);
+
+                    // Criar o personagem e calcular os valores
+                    Personagem personagem = new Personagem();
+                    personagem.classe = classe;
+                    personagem.nivel = nivel;
+
+                    // Calcular a vida e mana
+                    personagem.calcularVida();
+                    personagem.calcularMana();
+                    personagem.calcularCap();
+
+                    // Exibir os resultados
+                    resultadoArea.setText(personagem.exibirInfo());
+
+                } catch (NumberFormatException ex) {
+                    resultadoArea.setText("Por favor, insira um número válido para o nível.");
+                }
+            }
+        });
+
+        // Tornar a janela visível
+        frame.setVisible(true);
+    }
+}
